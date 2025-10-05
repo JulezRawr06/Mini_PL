@@ -1,0 +1,6 @@
+set attack = 50
+set defense = 30
+attack = attack + 10
+if attack > defense
+    print attack
+end

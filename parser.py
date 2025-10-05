@@ -40,9 +40,8 @@ class IfStmt(ASTNode):
     def __repr__(self):
         return f"If({self.condition}, {self.body}, Elif={self.elif_blocks}, Else={self.else_body})"
 
-# -----------------------
-# Parser
-# -----------------------
+"""Parser"""
+
 class Parser:
     def __init__(self, tokens): self.tokens, self.pos = tokens, 0
     def current(self): return self.tokens[self.pos]
@@ -79,6 +78,15 @@ class Parser:
             expr = self.expr()
             return Assign(name, expr)
 
+        if tok.type == lexer.TokenType.IDENTIFIER:
+            name = self.eat(lexer.TokenType.IDENTIFIER).value
+            if self.current().type == lexer.TokenType.ASSIGN:
+                self.eat(lexer.TokenType.ASSIGN)
+                expr = self.expr()
+                return Assign(name, expr)
+            else:
+                raise Exception(f"Unexpected token after identifier: {self.current()}")
+
         if tok.type == lexer.TokenType.IF:
             return self.if_statement()
 
@@ -114,9 +122,8 @@ class Parser:
         self.eat(lexer.TokenType.END)
         return IfStmt(condition, body, elif_blocks, else_body)
 
-    # -------------------
-    # Expressions
-    # -------------------
+    """Expressions"""
+
     def expr(self): return self.logic_expr()
 
     def logic_expr(self):

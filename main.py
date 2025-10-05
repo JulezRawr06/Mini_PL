@@ -1,20 +1,20 @@
-# Main program
+import lexer
+import parser
+from interpreter import MiniLang
 
-import lexer, parser
 if __name__ == "__main__":
-    code = """
-    SET x = 5
-    IF x > 10
-        PRINT x
-    ELSE
-        PRINT 999
-    END
-    POKEMON Pikachu
-    """
+    with open("program.mini", "r") as f:
+        code = f.read()
 
-    lexer = lexer.Lexer(code)
-    tokens = lexer.get_tokens()
-    print(tokens)
-    parser = parser.Parser(tokens)
-    tree = parser.parse()
-    print(tree)
+    lex = lexer.Lexer(code)
+    tokens = lex.get_tokens()
+
+    print(tokens)  # print tokens for debugging
+
+    parse = parser.Parser(tokens)
+    tree = parse.parse()
+
+    print(tree)  # print AST for debugging
+
+    interpreter = MiniLang()
+    interpreter.execute(tree) # executes program.mini
