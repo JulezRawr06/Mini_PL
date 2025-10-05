@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-"""Token Names"""
+"""Define Tokens with Enum"""
 
 class TokenType(Enum):
     # Keywords
@@ -8,9 +8,13 @@ class TokenType(Enum):
     PRINT = auto()
     SEARCH = auto()
     SET = auto()
+    END = auto()
+
+    # Conditionals
     IF = auto()
     ELSE = auto()
-    END = auto()
+
+    # Logical
     AND = auto()
     OR = auto()
     NOT = auto()
@@ -36,6 +40,8 @@ class TokenType(Enum):
     # End of file
     EOF = auto()
 
+"""Tokenizer"""
+
 class Token:
     def __init__(self, type_, value=None):
         self.type = type_
@@ -60,6 +66,8 @@ class Lexer:
         "NOT": TokenType.NOT,
     }
 
+    """Tokenization"""
+
     def __init__(self, text):
         self.text = text
         self.pos = 0
@@ -72,6 +80,8 @@ class Lexer:
     def skip_whitespace(self):
         while self.current_char and self.current_char.isspace():
             self.advance()
+
+    """Token Types"""
 
     def identifier(self):
         result = ""
@@ -133,7 +143,7 @@ class Lexer:
                     tokens.append(Token(TokenType.LT))
                 continue
 
-            # Math
+            # Arithmetic
             if self.current_char == "+":
                 self.advance(); tokens.append(Token(TokenType.PLUS)); continue
             if self.current_char == "-":
